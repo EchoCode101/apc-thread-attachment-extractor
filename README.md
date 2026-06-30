@@ -1,4 +1,4 @@
-# APC Thread Attachment Extractor
+# APC Extractor (NSFW)
 
 A userscript that extracts all attachment links (images and archives) from threads on `forum.allporncomix.com` and exports them as download lists for JDownloader 2.
 
