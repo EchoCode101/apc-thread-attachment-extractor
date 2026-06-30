@@ -536,9 +536,9 @@
     panel.id = "apcPanel";
     panel.style.cssText = `
       position: fixed;
-      top: 16px;
-      right: 16px;
-      width: 320px;
+      top: 8px;
+      right: 8px;
+      width: 310px;
       background: #181b27f5;
       color: #eaeaea;
       border: 1px solid rgb(89 66 230 / 72%);
@@ -553,18 +553,32 @@
     panel.innerHTML = `
       <div style="display:flex;justify-content:space-between;align-items:center;margin:0 0 10px 0;">
         <h3 style="margin:0;">APC Attachment Extractor</h3>
-        <button id="apcSettingsBtn"
-          style="
-            background:none;border:none;color:#aaa;cursor:pointer;
-            font-size:20px;width:32px;height:32px;display:flex;
-            align-items:center;justify-content:center;border-radius:6px;
-            transition:0.15s;
-          "
-          title="Crawler Job Settings"
-        >⚙</button>
+        <div style="display:flex;gap:2px;">
+          <button id="apcCollapseBtn"
+            style="
+              background:none;border:none;color:#aaa;cursor:pointer;
+              font-size:18px;width:28px;height:28px;display:flex;
+              align-items:center;justify-content:center;border-radius:6px;
+              transition:0.15s;
+            "
+            title="Collapse panel"
+          >−</button>
+          <button id="apcSettingsBtn"
+            style="
+              background:none;border:none;color:#aaa;cursor:pointer;
+              font-size:20px;width:32px;height:32px;display:flex;
+              align-items:center;justify-content:center;border-radius:6px;
+              transition:0.15s;
+            "
+            title="Crawler Job Settings"
+          >⚙</button>
+        </div>
       </div>
 
-      <div style="width:100%;padding:6px;border-radius:8px;border:1px solid rgb(76 84 111 / 50%);">
+      <div id="apcPanelBody"
+        style="max-height:2000px;opacity:1;overflow:hidden;transition:max-height 0.35s ease,opacity 0.25s ease;"
+      >
+        <div style="width:100%;padding:6px;border-radius:8px;border:1px solid rgb(76 84 111 / 50%);">
         <div style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;">
           <div>
             Start:
@@ -632,6 +646,7 @@
           border-radius:8px;border:1px solid rgb(76 84 111 / 50%);
           background:#151825d4;color:#dcdcdc;resize:vertical;"
       ></textarea>
+      </div>
     `;
 
     return panel;
@@ -1147,6 +1162,7 @@ Copied to clipboard | Export completed`);
     const imagesOnly = document.getElementById("imagesOnly");
     const archivesOnly = document.getElementById("archivesOnly");
     const settingsBtn = document.getElementById("apcSettingsBtn");
+    const collapseBtn = document.getElementById("apcCollapseBtn");
     const pauseBtn = document.getElementById("pauseBtn");
     const resumeBtn = document.getElementById("resumeBtn");
     const cancelBtn = document.getElementById("cancelBtn");
@@ -1198,6 +1214,37 @@ Copied to clipboard | Export completed`);
     if (pauseBtn) pauseBtn.addEventListener("click", handlePause);
     if (resumeBtn) resumeBtn.addEventListener("click", handleResume);
     if (cancelBtn) cancelBtn.addEventListener("click", handleCancel);
+
+    // Collapse / Expand toggle
+    if (collapseBtn) {
+      const panelBody = document.getElementById("apcPanelBody");
+      let isCollapsed = false;
+      try { isCollapsed = localStorage.getItem("apc_panel_collapsed") === "1"; } catch (_) { /* ignore */ }
+
+      if (isCollapsed) {
+        if (panelBody) { panelBody.style.maxHeight = "0"; panelBody.style.opacity = "0"; }
+        collapseBtn.textContent = "+";
+        collapseBtn.title = "Expand panel";
+      }
+
+      collapseBtn.addEventListener("click", () => {
+        if (!panelBody) return;
+        const currentlyCollapsed = panelBody.style.maxHeight === "0px" || panelBody.style.maxHeight === "0";
+        if (currentlyCollapsed) {
+          panelBody.style.maxHeight = "2000px";
+          panelBody.style.opacity = "1";
+          collapseBtn.textContent = "−";
+          collapseBtn.title = "Collapse panel";
+          try { localStorage.setItem("apc_panel_collapsed", "0"); } catch (_) { /* ignore */ }
+        } else {
+          panelBody.style.maxHeight = "0";
+          panelBody.style.opacity = "0";
+          collapseBtn.textContent = "+";
+          collapseBtn.title = "Expand panel";
+          try { localStorage.setItem("apc_panel_collapsed", "1"); } catch (_) { /* ignore */ }
+        }
+      });
+    }
 
     log("APC Extractor v2.0 ready");
   }
