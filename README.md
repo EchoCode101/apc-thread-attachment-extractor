@@ -110,7 +110,7 @@ The two checkboxes are mutually exclusive — checking one unchecks the other.
 
 ### During extraction
 
-While scanning, the panel shows a progress bar, current page info, estimated time remaining, and live counts of albums/images/archives found. You can **Pause** or **Cancel** the extraction at any time.
+While scanning, the panel shows a progress bar, current page info, estimated time remaining, and live counts of albums/images/archives found. You can **Pause** or **Cancel** the extraction at any time. Use the **`−`** button in the header to collapse the panel and keep the thread content visible.
 
 ### The Settings panel (gear icon)
 
@@ -157,6 +157,12 @@ If the extraction is interrupted (browser crash, tab closed, etc.), the script s
 ### Duplicate link removal
 
 Links that appear in multiple posts (e.g., the same file quoted in a reply) are deduplicated, so you never download the same file twice.
+
+### Collapsible panel
+
+The extraction panel can be collapsed to keep the thread content visible. Click the **`−`** button in the panel header to collapse it, and **`+`** to expand it again. The collapse state is saved to your browser's local storage, so the panel stays collapsed across page reloads.
+
+The collapse animation uses a CSS `max-height` + `opacity` transition for a smooth, lightweight effect with no JavaScript animation library required.
 
 ---
 
